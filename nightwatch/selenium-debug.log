@@ -1,0 +1,24 @@
+10:45:28.103 INFO - Selenium build info: version: '3.8.1', revision: '6e95a6684b'
+10:45:28.105 INFO - Launching a standalone Selenium Server
+2018-01-19 10:45:28.301:INFO::main: Logging initialized @568ms to org.seleniumhq.jetty9.util.log.StdErrLog
+10:45:28.350 INFO - Using `new FirefoxOptions()` is preferred to `DesiredCapabilities.firefox()`
+10:45:28.367 INFO - Using `new ChromeOptions()` is preferred to `DesiredCapabilities.chrome()`
+10:45:28.369 INFO - Using `new EdgeOptions()` is preferred to `DesiredCapabilities.edge()`
+10:45:28.370 INFO - Driver class not found: com.opera.core.systems.OperaDriver
+10:45:28.370 INFO - Using `new OperaOptions()` is preferred to `DesiredCapabilities.operaBlink()`
+10:45:28.371 INFO - Using `new SafariOptions()` is preferred to `DesiredCapabilities.safari()`
+10:45:28.372 INFO - Driver class not found: org.openqa.selenium.phantomjs.PhantomJSDriver
+10:45:28.417 INFO - Driver provider class org.openqa.selenium.safari.SafariDriver registration is skipped:
+ registration capabilities Capabilities {browserName: safari, platform: MAC, version: } does not match the current platform WIN10
+10:45:28.474 INFO - Using `new ChromeOptions()` is preferred to `DesiredCapabilities.chrome()`
+10:45:28.475 INFO - Using `new EdgeOptions()` is preferred to `DesiredCapabilities.edge()`
+10:45:28.475 INFO - Using `new FirefoxOptions()` is preferred to `DesiredCapabilities.firefox()`
+10:45:28.476 INFO - Using `new OperaOptions()` is preferred to `DesiredCapabilities.operaBlink()`
+10:45:28.476 INFO - Using `new SafariOptions()` is preferred to `DesiredCapabilities.safari()`
+10:45:28.487 INFO - Using the passthrough mode handler
+2018-01-19 10:45:28.524:INFO:osjs.Server:main: jetty-9.4.7.v20170914
+2018-01-19 10:45:28.548:WARN:osjs.SecurityHandler:main: ServletContext@o.s.j.s.ServletContextHandler@5524cca1{/,null,STARTING} has uncovered http methods for path: /
+2018-01-19 10:45:28.562:INFO:osjsh.ContextHandler:main: Started o.s.j.s.ServletContextHandler@5524cca1{/,null,AVAILABLE}
+2018-01-19 10:45:28.700:INFO:osjs.AbstractConnector:main: Started ServerConnector@17503f6b{HTTP/1.1,[http/1.1]}{0.0.0.0:4445}
+2018-01-19 10:45:28.701:INFO:osjs.Server:main: Started @967ms
+10:45:28.701 INFO - Selenium Server is up and running

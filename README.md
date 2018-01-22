@@ -13,10 +13,10 @@ We have here a basic calculator app that you will be utilizing to start your tes
 > This will cover creating a test case using NightwatchJS
 
 * **[Step 2](https://github.com/devmtn-aj/nightwatch-introduction-part1#step-2)** `nightwatch/step2`
->This will refactor that test using a separate file for selectors
+> This will refactor that test using a separate file for selectors
 
-* **Step 3** `nightwatch/step3`
-> **UNDER CONSTRUCTION** We will create a function that will check the UI of the calculator, and another to click buttons
+* **[Step 3](https://github.com/devmtn-aj/nightwatch-introduction-part1#step-3)** `nightwatch/step3`
+> We will create a function that will check the UI of the calculator, and another to click buttons
 
 * **Step 4** `nightwatch/step4` 
 > **UNDER CONSTRUCTION** This will introduce a data file, and another test

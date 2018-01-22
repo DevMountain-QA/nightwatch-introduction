@@ -18,11 +18,11 @@ module.exports = {
             .click(selectors['+'])
             .expect.element(selectors['result']).text.to.equal('0')
         browser
-            .click('button[name="2Button"]')
-            .expect.element('span[name="result"]').text.to.equal('2')
+            .click(selectors['2'])
+            .expect.element(selectors['result']).text.to.equal('2')
         browser
-            .click('button[name="equalsButton"]')
-            .expect.element('span[name="result"]').text.to.equal('4')
+            .click(selectors['='])
+            .expect.element(selectors['result']).text.to.equal('4')
     },
     '32.1*2=64.2' : browser => {
         functions.buttonClicker(browser, '3')

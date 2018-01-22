@@ -833,11 +833,11 @@ module.exports = {
             .click(selectors['+'])
             .expect.element(selectors['result']).text.to.equal('0')
         browser
-            .click('button[name="2Button"]')
-            .expect.element('span[name="result"]').text.to.equal('2')
+            .click(selectors['2'])
+            .expect.element(selectors['result']).text.to.equal('2')
         browser
-            .click('button[name="equalsButton"]')
-            .expect.element('span[name="result"]').text.to.equal('4')
+            .click(selectors['='])
+            .expect.element(selectors['result']).text.to.equal('4')
     },
     '32.1*2=64.2' : browser => {
         functions.buttonClicker(browser, '3')
@@ -868,6 +868,6 @@ If you see a problem or a typo, please fork, make the necessary changes, and cre
 
 #### 
 
-© DevMountain LLC, 2017. Unauthorized use and/or duplication of this material without express and written permission from DevMountain, LLC is strictly prohibited. Excerpts and links may be used, provided that full and clear credit is given to DevMountain with appropriate and specific direction to the original content.
+© DevMountain LLC, 2018. Unauthorized use and/or duplication of this material without express and written permission from DevMountain, LLC is strictly prohibited. Excerpts and links may be used, provided that full and clear credit is given to DevMountain with appropriate and specific direction to the original content.
 
 <img src="https://devmounta.in/img/logowhiteblue.png" width="250">

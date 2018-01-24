@@ -27,7 +27,7 @@ const UIChecker = browser => {
     // continue until end
 }
 
-
+var currentDisplay = '0'
 
 const buttonClicker = (browser, button) => {
 

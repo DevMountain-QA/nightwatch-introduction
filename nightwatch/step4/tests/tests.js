@@ -1,5 +1,6 @@
 const selectors = require('../supporting/selectors')
 const functions = require('../supporting/functions')
+const data = require('../supporting/data')
 
 module.exports = {
     beforeEach : browser => {
@@ -9,20 +10,24 @@ module.exports = {
         browser.end()
     },
     'UI Check' : browser => functions.uiChecker(browser),
-    '2+2=4' : browser => {
+
+    'Simple Addition' : browser => {
+        data.simpleAddition(browser, [2,2])
         //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
+        /*
         browser
             .click(selectors['2'])
             .expect.element(selectors['result']).text.to.equal('2')
-        browser
-            .click(selectors['+'])
+        browser.click(selectors['+'])
             .expect.element(selectors['result']).text.to.equal('0')
+            
         browser
             .click(selectors['2'])
             .expect.element(selectors['result']).text.to.equal('2')
         browser
             .click(selectors['='])
             .expect.element(selectors['result']).text.to.equal('4')
+            */
     },
     '32.1*2=64.2' : browser => {
         functions.buttonClicker(browser, '3')

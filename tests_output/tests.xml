@@ -5,18 +5,19 @@
 
   <testsuite name="tests"
     errors="1" failures="0" hostname="" id="" package="tests" skipped="2"
-    tests="3" time="0.005000" timestamp="Mon, 22 Jan 2018 23:20:10 GMT">
+    tests="3" time="0.01600" timestamp="Tue, 23 Jan 2018 17:32:14 GMT">
   
-    <testcase name="UICheck" classname="tests" time="0.005000" assertions="0">
+    <testcase name="UI Check" classname="tests" time="0.01600" assertions="0">
     </testcase>
   
 
   
     <system-err>
-        Error while running [Tests / UICheck]:
+        Error while running [Tests / UI Check]:
 
-  TypeError: functions.UIChecker is not a function
-    at Object.UICheck (C:\devmtn\nightwatch-introduction-part1\nightwatch\step3\tests\tests.js:14:37)
+  TypeError: Cannot read property &#39;forEach&#39; of undefined
+    at Object.uiChecker (C:\devmtn\nightwatch-introduction-part1\nightwatch\step4\supporting\functions.js:17:18)
+    at Object.UI Check (C:\devmtn\nightwatch-introduction-part1\nightwatch\step4\tests\tests.js:12:39)
     at Module.call (C:\Users\DoctaWong\AppData\Roaming\npm\node_modules\nightwatch\lib\runner\module.js:62:34)
     at C:\Users\DoctaWong\AppData\Roaming\npm\node_modules\nightwatch\lib\runner\testcase.js:70:29
     at _fulfilled (C:\Users\DoctaWong\AppData\Roaming\npm\node_modules\nightwatch\node_modules\q\q.js:834:54)
@@ -25,7 +26,6 @@
     at C:\Users\DoctaWong\AppData\Roaming\npm\node_modules\nightwatch\node_modules\q\q.js:556:49
     at runSingle (C:\Users\DoctaWong\AppData\Roaming\npm\node_modules\nightwatch\node_modules\q\q.js:137:13)
     at flush (C:\Users\DoctaWong\AppData\Roaming\npm\node_modules\nightwatch\node_modules\q\q.js:125:13)
-    at _combinedTickCallback (internal/process/next_tick.js:131:7)
     </system-err>
   
 

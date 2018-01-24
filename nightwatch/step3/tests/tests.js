@@ -2,6 +2,7 @@ const selectors = require('../supporting/selectors')
 const functions = require('../supporting/functions')
 
 
+
 module.exports = {
 
     beforeEach: browser => {
@@ -29,20 +30,18 @@ module.exports = {
             .expect.element(selectors['result']).text.to.equal('4')
     },
 
-    '32.1*2=64.2': browser => {
-        functions.buttonClicker(browser, '3')
-        functions.buttonClicker(browser, '2')
-        functions.buttonClicker(browser, '.')
-        functions.buttonClicker(browser, '1')
-        functions.buttonClicker(browser, '*')
-        functions.buttonClicker(browser, '2')
-        functions.buttonClicker(browser, '=')
-        functions.buttonClicker(browser, '6')
-        functions.buttonClicker(browser, '4')
-        functions.buttonClicker(browser, '.')
-        functions.buttonClicker(browser, '2')
-        browser.expect.element(selectors['result']).text.to.equal('64.2')
-    }
-
-
+'32.1*2=64.2': browser => {
+    functions.buttonClicker(browser, '3')
+    functions.buttonClicker(browser, '2')
+    functions.buttonClicker(browser, '.')
+    functions.buttonClicker(browser, '1')
+    functions.buttonClicker(browser, '*')
+    functions.buttonClicker(browser, '2')
+    functions.buttonClicker(browser, '=')
+    functions.buttonClicker(browser, '6')
+    functions.buttonClicker(browser, '4')
+    functions.buttonClicker(browser, '.')
+    functions.buttonClicker(browser, '2')
+    browser.expect.element(selectors['result']).text.to.equal('64.2')
+}
 }

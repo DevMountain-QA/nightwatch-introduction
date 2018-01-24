@@ -1126,6 +1126,323 @@ module.exports = {
 
 </details>
 
+## Step 5
+
+### Overview
+
+Now that we have our data file in place, all the pieces are ready, we can get our tests down to ONE LINE ENTRIES.
+
+### Instructions
+
+* Create a new function called `testRunner` that will take a test data object passed in, and run all of the test steps for it
+* Update existing tests to use the new testRunner
+* Create new tests, which will entail creating a new test data object, and adding only ONE LINE to the `tests.js` file
+
+<details>
+
+<summary> Detailed Instructions </summary>
+
+In our `functions.js` file, we're going to create one last function, a function that will take the usual `browser` argument, and a `data` argument, which we expect to be one of the test data objects we created in `data.js` back in Step 4.  Let's look at the JSDoc comment for the function:
+
+```js
+/**
+ * runs a full test based on the test data object passed in
+ * 
+ * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
+ * @param {object} data        an object passed in containing test data in the expected format
+ * { buttons: [], solution: ''}
+ */
+```
+
+We can even add to the comment that little note of what the data object should be formatted like.  Matches those in our `data.js` file perfectly!
+
+Then we can declare our function, and put comments in denoting what we'll do in each step.
+
+```js
+const testRunner = (browser, data) => {
+    //click all the buttons
+
+    //check the solution
+}
+```
+
+It's really straightforward.  Two steps.  Now, 'click all the buttons' might sound a little complex up front, but if you remember that the `buttons` property is an array, there's a nifty little function we can use to make our life easier.
+
+```js
+    //click all the buttons
+    data.buttons.forEach(button => {
+
+    })
+```
+
+`.forEach` is handy because it will take each item in an array, in order, and do something with it in a callback, in this case the `button => {}` function.  We already know what we want to do with each button.  Click it!  And we already have the nice `buttonClicker` function too.
+
+```js
+    //click all the buttons
+    data.buttons.forEach(button=>{
+        buttonClicker(browser, button)
+    })
+```
+
+All that's left for this function is to `check the solution`, which again, we know pretty well how to do.
+
+```js
+    //check the solution
+    browser.expect.element(selectors['result']).text.to.equal(data.solution)
+```
+
+With that, our `testRunner` function is done!  All that's left is to update our export, and then we can move on.
+
+```js
+module.exports = {
+    uiChecker: uiChecker,
+    buttonClicker: buttonClicker,
+    testRunner: testRunner
+}
+```
+
+Now.  With our function ready to go, we can refactor an existing test.  I'll explain one.  Here's where `2+2=4` stands in our `tests.js` file:
+
+```js
+    '2+2=4' : browser => {
+        //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
+        functions.buttonClicker(browser, data.simpleAddition.buttons[0])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[1])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[2])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[3])
+        browser.expect.element(selectors['result']).text.to.equal(data.simpleAddition.solution)
+    },
+```
+
+Now, our function just needs the `browser` and the data object, or in this test's case, `data.simpleAddition`.  So we can refactor the `2+2=4` test to:
+
+```js
+    '2+2=4' : browser => functions.testRunner(browser, data.simpleAddition),
+```
+
+Seem too good to be true?  It's not!  Try it out.  Refactor the other tests, try them out.  You should see something like this:
+
+<img src="https://raw.githubusercontent.com/devmtn-aj/nightwatch-introduction/solution/readme-assets/step4Results.png"/>
+
+It really is that simple.  As a side note, you really can just drop your `const selectors...` from the `tests.js` file now too, we use all our selectors in the `functions.js` file.  Now all that `test.js` does is start the browser and keep the tests and data straight.  Nice and neat!
+
+Finally, our last step is going to be adding any and all tests you want to your cycle, just to see things improve!  I'll give you one...
+
+To add to `data.js`
+
+```js
+    simpleDivision: {
+        buttons: ['3', '5', '/', '7', '='],
+        solution: '5'
+    }
+```
+
+To add to `tests.js`
+
+```js
+    '35/7=5' : browser => functions.testRunner(browser, data.simpleDivision)
+```
+
+Save it and run it!
+
+If you have exactly the tests I've reproduced, you'll have 70 total assertions passed.  Good work!
+
+Now, start thinking about everything else you could do to test the calculator.  I'll tell you this, there are bugs.  Write tests, run tests, learn!  Keep up the good work!
+
+</details>
+
+### Code Solution
+
+<details>
+
+<summary> <code> data.js </code> </summary>
+
+```js
+module.exports = {
+    simpleAddition : {
+        buttons: ['2', '+', '2', '='],
+        solution: '4'
+    },
+    decimalMultiplication : {
+        buttons: ['3', '2', '.', '1', '*', '2', '='],
+        solution: '64.2'
+    },
+    otherButtons : {
+        buttons: ['5', '4', '2', '1', '%', '+/-', '+', '2', '='],
+        solution: '-52.21'
+    },
+    simpleDivision: {
+        buttons: ['3', '5', '/', '7', '='],
+        solution: '5'
+    }
+}
+```
+
+</details>
+
+<details>
+
+<summary> <code> functions.js </code> </summary>
+
+```js
+const selectors = require('./selectors')
+
+/**
+ * Looks over the UI to make sure needed elements are visible and displaying the right text.  (Buttons and the display)
+ * 
+ * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
+ */
+const uiChecker = browser => {
+    //check elements for visibility
+    browser.expect.element(selectors['0']).to.be.visible
+    browser.expect.element(selectors['1']).to.be.visible
+    browser.expect.element(selectors['2']).to.be.visible
+    browser.expect.element(selectors['3']).to.be.visible
+    browser.expect.element(selectors['4']).to.be.visible
+    browser.expect.element(selectors['5']).to.be.visible
+    browser.expect.element(selectors['6']).to.be.visible
+    browser.expect.element(selectors['7']).to.be.visible
+    browser.expect.element(selectors['8']).to.be.visible
+    browser.expect.element(selectors['9']).to.be.visible
+    browser.expect.element(selectors['+']).to.be.visible
+    browser.expect.element(selectors['-']).to.be.visible
+    browser.expect.element(selectors['*']).to.be.visible
+    browser.expect.element(selectors['/']).to.be.visible
+    browser.expect.element(selectors['=']).to.be.visible
+    browser.expect.element(selectors['%']).to.be.visible
+    browser.expect.element(selectors['+/-']).to.be.visible
+    browser.expect.element(selectors['AC']).to.be.visible
+    browser.expect.element(selectors['.']).to.be.visible
+    browser.expect.element(selectors['result']).to.be.visible
+    //check elements for displayed text
+    browser.expect.element(selectors['0']).text.to.equal('0')
+    browser.expect.element(selectors['1']).text.to.equal('1')
+    browser.expect.element(selectors['2']).text.to.equal('2')
+    browser.expect.element(selectors['3']).text.to.equal('3')
+    browser.expect.element(selectors['4']).text.to.equal('4')
+    browser.expect.element(selectors['5']).text.to.equal('5')
+    browser.expect.element(selectors['6']).text.to.equal('6')
+    browser.expect.element(selectors['7']).text.to.equal('7')
+    browser.expect.element(selectors['8']).text.to.equal('8')
+    browser.expect.element(selectors['9']).text.to.equal('9')
+    browser.expect.element(selectors['+']).text.to.equal('+')
+    browser.expect.element(selectors['-']).text.to.equal('-')
+    browser.expect.element(selectors['*']).text.to.equal('×')
+    browser.expect.element(selectors['/']).text.to.equal('÷')
+    browser.expect.element(selectors['=']).text.to.equal('=')
+    browser.expect.element(selectors['%']).text.to.equal('%')
+    browser.expect.element(selectors['+/-']).text.to.equal('+/-')
+    browser.expect.element(selectors['AC']).text.to.equal('AC')
+    browser.expect.element(selectors['.']).text.to.equal('.')
+    browser.expect.element(selectors['result']).text.to.equal('0')
+}
+
+// keeps track of the number on the calculator display screen based
+// on button clicks
+var currentDisplay = '0'
+
+/**
+ * Clicks a button and checks that the resulting display is correct.
+ * If the button clicked '=', we won't check the result in this function.
+ * As the function won't reset with the test, we should click the clear button before each test
+ * 
+ * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
+ * @param {string} button      the key of the button to click (corresponds to the keys in selectors.js)
+ */
+const buttonClicker = (browser, button) => {
+    //click the button
+    browser.click(selectors[button])
+    //set the expected display per the requirements, and check it
+    switch (button) {
+        case 'AC': //clear the display (set to 0)
+            currentDisplay = '0'
+            break
+        case '=': //end the function if '='
+            return
+            break
+        case '%': //if the display is not 0, divide it by 100
+            if (currentDisplay !== '0')
+                currentDisplay = (parseFloat(currentDisplay) / 100).toString()
+            break
+        case '+/-': //flip the positive/negative status of the number
+            if (currentDisplay[0] === '-')
+                currentDisplay = currentDisplay.substr(1)
+            else
+                currentDisplay = '-' + currentDisplay
+            break
+        case '*': //if the button is any of these 4, default the screen back to 0
+        case '/':
+        case '+':
+        case '-':
+            currentDisplay = '0'
+            break
+        case '.': //if it's a decimal, check that the number doesn't already contain a . - if it does, leave currentDisplay alone,
+            if (currentDisplay.indexOf('.') === -1) //if there is no decimal, indexOf returns -1
+                currentDisplay += '.'
+            break
+        default: //for any regular number, update the display appropriately
+            if (currentDisplay === '0')
+                currentDisplay = button
+            else
+                currentDisplay += button
+    }
+    //now that currentDisplay has been updated appropraitely (matching the requirements) we can 'expect' the result
+    browser.expect.element(selectors['result']).text.to.equal(currentDisplay)
+}
+
+
+/**
+ * runs a full test based on the test data object passed in
+ * 
+ * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
+ * @param {object} data        an object passed in containing test data in the expected format
+ * { buttons: [], solution: ''}
+ */
+const testRunner = (browser, data) => {
+    //click all the buttons
+    data.buttons.forEach(button=>{
+        buttonClicker(browser, button)
+    })
+    //check the solution
+    browser.expect.element(selectors['result']).text.to.equal(data.solution)
+}
+
+module.exports = {
+    uiChecker: uiChecker,
+    buttonClicker: buttonClicker,
+    testRunner: testRunner
+}
+```
+
+</details>
+
+<details>
+
+<summary> <code> tests.js </code> </summary>
+
+```js
+const selectors = require('../supporting/selectors')
+const functions = require('../supporting/functions')
+const data = require('../supporting/data')
+
+module.exports = {
+    beforeEach : browser => {
+        browser.url('http://localhost:3000')
+        functions.buttonClicker(browser, 'AC')
+    },
+    after : browser => {
+        browser.end()
+    },
+    'UI Check' : browser => functions.uiChecker(browser),
+    '2+2=4' : browser => functions.testRunner(browser, data.simpleAddition),
+    '32.1*2=64.2' : browser => functions.testRunner(browser, data.decimalMultiplication),
+    'otherButtons' : browser => functions.testRunner(browser, data.otherButtons),
+    '35/7=5' : browser => functions.testRunner(browser, data.simpleDivision)
+}
+```
+
+</details>
+
 ## Contributions
 
 ### Contributions

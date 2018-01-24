@@ -5,6 +5,7 @@ const data = require('../supporting/data')
 module.exports = {
     beforeEach : browser => {
         browser.url('http://localhost:3000')
+        functions.buttonClicker(browser, 'AC')
     },
     after : browser => {
         browser.end()
@@ -14,6 +15,7 @@ module.exports = {
     'Simple Addition' : browser => {
         data.simpleAddition(browser, [2,2])
         //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
+<<<<<<< HEAD:nightwatch/step4/tests/myTests.js
         /*
         browser
             .click(selectors['2'])
@@ -28,6 +30,13 @@ module.exports = {
             .click(selectors['='])
             .expect.element(selectors['result']).text.to.equal('4')
             */
+=======
+        functions.buttonClicker(browser, '2')
+        functions.buttonClicker(browser, '+')
+        functions.buttonClicker(browser, '2')
+        functions.buttonClicker(browser, '=')
+        browser.expect.element(selectors['result']).text.to.equal('4')
+>>>>>>> c449c8c2dd80dbf03f2c5ab1a253197a3a9784a4:nightwatch/step4/tests/tests.js
     },
     '32.1*2=64.2' : browser => {
         functions.buttonClicker(browser, '3')

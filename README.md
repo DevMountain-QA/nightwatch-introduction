@@ -66,7 +66,7 @@ Note2: Also for Windows, your `chromedriver` listing needs to be `chromedriver.e
 
 ### The Format
 
-Every step is in a separate folder.  Look in the file explorer of the project, and compare it to the file tree below.  (Some of this is under construction, but this is what your starting file structure in the nightwatch folder will look like)
+Every step is in a separate folder.  Look in the file explorer of the project, and compare it to the file tree below.  (Some of this is under construction, but this is what your starting file structure in the nightwatch folder will look like, before you've done ANY work)
 
 <details>
 
@@ -581,11 +581,16 @@ I'm only showing the very end, but you can see that adding the `UI Check` test, 
 
 With our first function out of the way, we can try one that's a little less striaghtforward.  This is the function that clicks a button and verifies the display.
 
+*What follows for Step 3 is a stretch goal.*  It's pretty intensive compared to the code we've looked at so far.  Feel free to play with it, but I won't be going into too much detail on all of the steps.
+
+<details>
+
+<summary> <code> buttonClicker </code> Stretch Goal </summary>
+
 ```js
 /**
  * Clicks a button and checks that the resulting display is correct.
- * If the button clicked is a special operator (=, %, +/-), we won't
- * check the result in this function. 
+ * If the button clicked is a '=', we won't check the result in this function. 
  * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
  * @param {string} button      the key of the button to click (corresponds to the keys in selectors.js)
  */
@@ -598,18 +603,27 @@ We can fully declare the function, as a constant again, and we'll give it a very
 ```js
 /**
  * Clicks a button and checks that the resulting display is correct.
- * If the button clicked is a special operator (=, %, +/-), we won't
- * check the result in this function.
- *  
+ * If the button clicked '=', we won't check the result in this function.
+ * As the function won't reset with the test, we should click the clear button before each test
+ * 
  * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
  * @param {string} button      the key of the button to click (corresponds to the keys in selectors.js)
  */
 const buttonClicker = (browser, button) => {
     //click the button
 
-    //verify the display if NOT a special operator
+    //set the expected display per the requirements, and check it
     
 }
+```
+
+Before we forget, we'll update our `beforeEach` in `tests.js` to call this function and click the 'AC' button.
+
+```js
+    beforeEach : browser => {
+        browser.url('http://localhost:3000')
+        functions.buttonClicker(browser, 'AC')
+    },
 ```
 
 We can set up the button click portion pretty easily.  Remember how we required the `selectors.js` export into `functions.js` earlier?  We only need to use Nightwatch's `.click()` function for that step.  The important thing here is that we'll use the selector named by the `button` parameter, which is defined as needing to be a key from that file anyway ('0', 'AC', etc).
@@ -627,46 +641,89 @@ That takes care of that.  Now to verify the display.  To do this, the first thin
 var currentDisplay = '0'
 ```
 
-We have an easy start - we've declared that we won't check the display for the listed "special operators" =, % and +/-.
+Now we'll evaluate the button for each of the values, and set the display appropriately.  We'll use a `switch` statement to do this.  In brief, switch statements take the value in the `()` and looks through the `case X:` statements for a match, running the matching code.
+* I've updated the comments for what each `case` should do, you can fill it out and then compare it to the actual below.
 
 ```js
-    //if the button is one of the listed 'special operators' we'll just end our function now.
-    if (button === '=' || button === '%' || button === '+/-')
-        return
+    //set the expected display per the requirements, and check it
+    switch (button) {
+        case 'AC': //clear the display (set to 0)
+
+            break
+        case '=': //end the function if '='
+
+            break
+        case '%': //if the display is not 0, divide it by 100
+
+            break
+        case '+/-': //flip the positive/negative status of the number
+
+            break
+        case '*': //if the button is any of these 4, default the screen back to 0
+        case '/':
+        case '+':
+        case '-':
+
+            break
+        case '.': //if it's a decimal, check that the number doesn't already contain a . - if it does, leave currentDisplay alone,
+
+            break
+        default: //for any regular number, update the display appropriately
+
+            break
+    }
+
 ```
 
-Now we can start getting into the thick of it.  First, I want to define a couple of functions.
+<details>
 
-*isNaN()*
-> Takes an input.  If it is a number, returns false.  If it is 'not a number' returns true.
-
-*parseInt()*
-> Takes an input.  If it is a number (even in a string) returns that number.  Otherwise, returns 'NaN' (not a number)
-
-We know based on how the calculator works, if anything else that is not a number (besides '.') is clicked, the display is reset to '0'.  We can check for that in our function, so that we expect the right result.
+<summary> <code> cases in detail </code> </summary>
 
 ```js
-//if the button clicked is not a number or decimal, we handle it a little differently.
-    if (isNaN(parseInt(button)) && button !== '.') {
-        //current display is returned to 0
-        currentDisplay = '0'
-        browser.expect.element(selectors['result']).text.to.equal('0')
+    //set the expected display per the requirements, and check it
+    switch (button) {
+        case 'AC': //clear the display (set to 0)
+            currentDisplay = '0'
+            break
+        case '=': //end the function if '='
+            return
+            break
+        case '%': //if the display is not 0, divide it by 100
+            if (currentDisplay !== '0')
+                currentDisplay = (parseFloat(currentDisplay) / 100).toString()
+            break
+        case '+/-': //flip the positive/negative status of the number
+            if (currentDisplay[0] === '-')
+                currentDisplay = currentDisplay.substr(1)
+            else
+                currentDisplay = '-' + currentDisplay
+            break
+        case '*': //if the button is any of these 4, default the screen back to 0
+        case '/':
+        case '+':
+        case '-':
+            currentDisplay = '0'
+            break
+        case '.': //if it's a decimal, check that the number doesn't already contain a . - if it does, leave currentDisplay alone,
+            if (currentDisplay.indexOf('.') === -1) //if there is no decimal, indexOf returns -1
+                currentDisplay += '.'
+            break
+        default: //for any regular number, update the display appropriately
+            if (currentDisplay === '0')
+                currentDisplay = button
+            else
+                currentDisplay += button
+            break
     }
 ```
 
-To handle number clicks (or decimal clicks) we have things a little easier.  We may need to replace a zero on the screen (if the display is '0' and we didn't press the decimal), otherwise we just add the new number to the existing number on the screen, and expect the new result.
+</details>
+
+All that's left now is to compare our expected `currentDisplay` to what's actually in the display
 
 ```js
-    else {
-        //if the current display is 0, the button clicked will replace it, unless the button is a period.
-        if (currentDisplay === '0' && button !== '.')
-            currentDisplay = button
-        //otherwise, the button clicked is appended to the current display
-        else
-            currentDisplay += button
-        //either way, now we can check the updated display
-        browser.expect.element(selectors['result']).text.to.equal(currentDisplay)
-    }
+    //now that currentDisplay has been updated appropraitely (matching the requirements) we can 'expect' the result
+    browser.expect.element(selectors['result']).text.to.equal(currentDisplay)
 ```
 
 The resulting function is a little complicated, but it will certainly work.  Finally, we can add the `buttonClicker` function to our exported object.
@@ -697,15 +754,21 @@ In our `tests.js` file, let's create a new test, 32.1*2=64.2.  This will check d
 
 This test gave our function a bit of a workout, but it works!  Run the tests again (`npm run step3`)
 
-<img src="https://raw.githubusercontent.com/devmtn-aj/nightwatch-introduction/solution/readme-assets/step1Results.png"/>
+<img src="https://raw.githubusercontent.com/devmtn-aj/nightwatch-introduction/solution/readme-assets/step3Results.png"/>
 
 You should get something similar to this!  If not, look back over your functions and test, you can also compare the files to the code solution below.
 
-Good work easing into the world of functions - we'll look at one in our next step that will make life even easier for future testing efforts!
+You can also rework your existing test(s) now with the `buttonClicker` function!
+
+</details>
+
+Good work easing into the world of functions - or diving in if you tackled the `buttonClicker`.  In our next step, we'll start incorporating a data file!
 
 </details>
 
 ### Code Solution
+
+*Note:* The solutions incorporate the `buttonClicker` stretch goal.
 
 <details>
 
@@ -770,8 +833,8 @@ var currentDisplay = '0'
 
 /**
  * Clicks a button and checks that the resulting display is correct.
- * If the button clicked is a special operator (=, %, +/-), we won't
- * check the result in this function.
+ * If the button clicked '=', we won't check the result in this function.
+ * As the function won't reset with the test, we should click the clear button before each test
  * 
  * @param {object} browser     an object provided by NightwatchJS which hooks into the test browser
  * @param {string} button      the key of the button to click (corresponds to the keys in selectors.js)
@@ -779,33 +842,48 @@ var currentDisplay = '0'
 const buttonClicker = (browser, button) => {
     //click the button
     browser.click(selectors[button])
-    //verify the display if NOT a special operator
-    //if the button is one of the listed 'special operators' we'll just end our function now.
-    if (button === '=' || button === '%' || button === '+/-')
-        return
-    //if the button clicked is not a number or decimal, we handle it a little differently.
-    if (isNaN(parseInt(button)) && button !== '.') {
-        //current display is returned to 0
-        currentDisplay = '0'
-        browser.expect.element(selectors['result']).text.to.equal('0')
+    //set the expected display per the requirements, and check it
+    switch (button) {
+        case 'AC': //clear the display (set to 0)
+            currentDisplay = '0'
+            break
+        case '=': //end the function if '='
+            return
+            break
+        case '%': //if the display is not 0, divide it by 100
+            if (currentDisplay !== '0')
+                currentDisplay = (parseFloat(currentDisplay) / 100).toString()
+            break
+        case '+/-': //flip the positive/negative status of the number
+            if (currentDisplay[0] === '-')
+                currentDisplay = currentDisplay.substr(1)
+            else
+                currentDisplay = '-' + currentDisplay
+            break
+        case '*': //if the button is any of these 4, default the screen back to 0
+        case '/':
+        case '+':
+        case '-':
+            currentDisplay = '0'
+            break
+        case '.': //if it's a decimal, check that the number doesn't already contain a . - if it does, leave currentDisplay alone,
+            if (currentDisplay.indexOf('.') === -1) //if there is no decimal, indexOf returns -1
+                currentDisplay += '.'
+            break
+        default: //for any regular number, update the display appropriately
+            if (currentDisplay === '0')
+                currentDisplay = button
+            else
+                currentDisplay += button
     }
-    else {
-        //if the current display is 0, the button clicked will replace it, unless the button is a period.
-        if (currentDisplay === '0' && button !== '.')
-            currentDisplay = button
-        //otherwise, the button clicked is appended to the current display
-        else
-            currentDisplay += button
-        //either way, now we can check the updated display
-        browser.expect.element(selectors['result']).text.to.equal(currentDisplay)
-    }
+    //now that currentDisplay has been updated appropraitely (matching the requirements) we can 'expect' the result
+    browser.expect.element(selectors['result']).text.to.equal(currentDisplay)
 }
 
 module.exports = {
     uiChecker: uiChecker,
     buttonClicker: buttonClicker
 }
-```
 
 </details>
 
@@ -820,6 +898,7 @@ const functions = require('../supporting/functions')
 module.exports = {
     beforeEach : browser => {
         browser.url('http://localhost:3000')
+        functions.buttonClicker(browser, 'AC')
     },
     after : browser => {
         browser.end()
@@ -827,18 +906,11 @@ module.exports = {
     'UI Check' : browser => functions.uiChecker(browser),
     '2+2=4' : browser => {
         //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
-        browser
-            .click(selectors['2'])
-            .expect.element(selectors['result']).text.to.equal('2')
-        browser
-            .click(selectors['+'])
-            .expect.element(selectors['result']).text.to.equal('0')
-        browser
-            .click(selectors['2'])
-            .expect.element(selectors['result']).text.to.equal('2')
-        browser
-            .click(selectors['='])
-            .expect.element(selectors['result']).text.to.equal('4')
+        functions.buttonClicker(browser, '2')
+        functions.buttonClicker(browser, '+')
+        functions.buttonClicker(browser, '2')
+        functions.buttonClicker(browser, '=')
+        browser.expect.element(selectors['result']).text.to.equal('4')
     },
     '32.1*2=64.2' : browser => {
         functions.buttonClicker(browser, '3')
@@ -872,11 +944,187 @@ This may well be the simplest step of the 5...  We're going to refactor our exis
 
 <summary> Detailed Instructions </summary>
 
+In practice, you'll set up and call your `data.js` file the same way you set up and called `selectors.js`...
 
+```js
+module.exports = {
+    //setting it up in data.js
+}
+```
+
+```js
+//adding it to the filed required in tests.js
+const selectors = require('../supporting/selectors')
+const functions = require('../supporting/functions')
+const data = require('../supporting/data')
+```
+
+With this framework, we want to create objects in our `data.js` export that contain all the data for one test.  So, in the files prepped already for Step 4, we have two tests, so we'll need two corresponding objects in the `data.js` exported object.  And while our test names before were easily understood, `'32.1*2=64.2'` is a pain to write over and over again.  We'll name the object for our `2+2=4` function `simpleAddition`, and the other `decimalMultiplication`.
+
+```js
+module.exports = {
+    simpleAddition : {
+
+    },
+    decimalMultiplication : {
+
+    }
+}
+```
+
+Now, each test data object should track all the inputs and the outputs.  For another app this may be more complicated, but for our simple calculator, we have buttons pressed, and expected results.  We don't need to worry about what the display should look like after each button, because our `buttonClicker` function checks those automatically.  We only need to worry about our final solution.  We can add a `buttons` property whose value will be an array of all the buttons to be clicked, and another `solution` property with the expected solution to the calculation.
+
+```js
+module.exports = {
+    simpleAddition : {
+        buttons: [],
+        solution: ''
+    },
+    decimalMultiplication : {
+        buttons: [],
+        solution: ''
+    }
+}
+```
+
+With the framework in place, we can popluate the buttons and solution accordingly.
+
+```js
+module.exports = {
+    simpleAddition : {
+        buttons: ['2', '+', '2', '='],
+        solution: '4'
+    },
+    decimalMultiplication : {
+        buttons: ['3', '2', '.', '1', '*', '2', '='],
+        solution: '64.2'
+    }
+}
+```
+
+Now that we have our data file ready to go for our existing tests, we'll refactor them, so that any time they declared an input or expected result, we'll get it from our data file.
+
+For example, the first line of our first test in `tests.js` is:
+
+```js
+        functions.buttonClicker(browser, '2')
+```
+
+In this example, `'2'` is the declared input, the button to be clicked.  As it's the first button to be clicked in our first test data object in `data.js`, `simpleAddition`, and we've already required the `data.js` export in our `test.js` file, we can replace the `'2'` in this line like so:
+
+```js
+        functions.buttonClicker(browser, data.simpleAddition.buttons[0])
+```
+
+`data.simpleAddition.buttons[0]` grabs the `data` constant, which is our `data.js` export, then the `simpleAddition` property, which is our test data object, then the `buttons` property, which is the array of our buttons to click, and then `[0]`, the button click that's first in the list.
+
+For the next line, we'll do the same thing, only calling `.buttons[1]` at the end, then so on until we've clicked all the buttons and we check the result.  The final product for our first test will be this:
+
+```js
+    '2+2=4' : browser => {
+        //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
+        functions.buttonClicker(browser, data.simpleAddition.buttons[0])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[1])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[2])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[3])
+        browser.expect.element(selectors['result']).text.to.equal(data.simpleAddition.solution)
+    },
+```
+
+Now you should be able to refactor the second test.
+
+The next part of this step is to add a new test that will look at the % and +/- keys.  We'll create a test that will just enter a series of numbers, and then click both keys in sequence, to get '-52.21'.  In sequence that means we can click '5', '4', '2', '1', '%', '+/-', '+', '2', '='.  So, let's set up the test data object in `data.js` for that!  I'll name the property `otherButtons` since we're using it to test unchecked buttons.
+
+```js
+    otherButtons : {
+        buttons: ['5', '4', '2', '1', '%', '+/-', '+', '2', '='],
+        solution: '-52.21'
+    }
+```
+
+We'll add another test to our `tests.js` file, an we'll just name it `'otherButtons'` as well for simplicity's sake.  Use the same format to declare the test that you did for `'2+2=4'`, using `buttonClicker` and `data`.  What the code ought to look like will be included in the code solution, but when all is said and done, and you run your tests (`npm run step4`), your results should look something like this:
+
+<img src="https://raw.githubusercontent.com/devmtn-aj/nightwatch-introduction/solution/readme-assets/step4Results.png"/>
 
 </details>
 
 ### Code Solution
+
+<details>
+
+<summary> <code> data.js </code> </summary>
+
+```js
+module.exports = {
+    simpleAddition : {
+        buttons: ['2', '+', '2', '='],
+        solution: '4'
+    },
+    decimalMultiplication : {
+        buttons: ['3', '2', '.', '1', '*', '2', '='],
+        solution: '64.2'
+    },
+    otherButtons : {
+        buttons: ['5', '4', '2', '1', '%', '+/-', '+', '2', '='],
+        solution: '-52.21'
+    }
+}
+```
+
+</details>
+
+<details>
+
+<summary> <code> tests.js </code> </summary>
+
+```js
+const selectors = require('../supporting/selectors')
+const functions = require('../supporting/functions')
+const data = require('../supporting/data')
+
+module.exports = {
+    beforeEach : browser => {
+        browser.url('http://localhost:3000')
+        functions.buttonClicker(browser, 'AC')
+    },
+    after : browser => {
+        browser.end()
+    },
+    'UI Check' : browser => functions.uiChecker(browser),
+    '2+2=4' : browser => {
+        //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
+        functions.buttonClicker(browser, data.simpleAddition.buttons[0])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[1])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[2])
+        functions.buttonClicker(browser, data.simpleAddition.buttons[3])
+        browser.expect.element(selectors['result']).text.to.equal(data.simpleAddition.solution)
+    },
+    '32.1*2=64.2' : browser => {
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[0])
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[1])
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[2])
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[3])
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[4])
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[5])
+        functions.buttonClicker(browser, data.decimalMultiplication.buttons[6])
+        browser.expect.element(selectors['result']).text.to.equal(data.decimalMultiplication.solution)
+    },
+    'otherButtons' : browser => {
+        functions.buttonClicker(browser, data.otherButtons.buttons[0])
+        functions.buttonClicker(browser, data.otherButtons.buttons[1])
+        functions.buttonClicker(browser, data.otherButtons.buttons[2])
+        functions.buttonClicker(browser, data.otherButtons.buttons[3])
+        functions.buttonClicker(browser, data.otherButtons.buttons[4])
+        functions.buttonClicker(browser, data.otherButtons.buttons[5])
+        functions.buttonClicker(browser, data.otherButtons.buttons[6])
+        functions.buttonClicker(browser, data.otherButtons.buttons[7])
+        functions.buttonClicker(browser, data.otherButtons.buttons[8])
+        browser.expect.element(selectors['result']).text.to.equal(data.otherButtons.solution)
+    }
+}
+```
+
+</details>
 
 ## Contributions
 

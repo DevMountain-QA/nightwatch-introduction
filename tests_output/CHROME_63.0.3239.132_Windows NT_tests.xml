@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites errors="0"
             failures="0"
-            tests="3">
+            tests="5">
 
   <testsuite name="tests"
     errors="0" failures="0" hostname="" id="" package="tests" skipped="0"
-    tests="3" time="11.34" timestamp="Tue, 23 Jan 2018 20:37:52 GMT">
+    tests="5" time="15.66" timestamp="Wed, 24 Jan 2018 17:19:54 GMT">
   
-    <testcase name="UI Check" classname="tests" time="9.611" assertions="37">
+    <testcase name="UI Check" classname="tests" time="11.28" assertions="41">
+
+    
+
+    
+
+    
+
+    
 
     
 
@@ -84,7 +92,9 @@
     
     </testcase>
   
-    <testcase name="Simple Addition" classname="tests" time="0.7710" assertions="4">
+    <testcase name="2+2=4" classname="tests" time="1.157" assertions="5">
+
+    
 
     
 
@@ -95,7 +105,47 @@
     
     </testcase>
   
-    <testcase name="32.1*2=64.2" classname="tests" time="0.9530" assertions="7">
+    <testcase name="35/7 = 5" classname="tests" time="0.9110" assertions="6">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="32.1*2=64.2" classname="tests" time="1.051" assertions="8">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    </testcase>
+  
+    <testcase name="otherButtons" classname="tests" time="1.259" assertions="10">
+
+    
+
+    
+
+    
 
     
 

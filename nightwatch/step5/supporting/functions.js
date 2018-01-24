@@ -103,7 +103,23 @@ const buttonClicker = (browser, button) => {
     browser.expect.element(selectors['result']).text.to.equal(currentDisplay)
 }
 
+const testRunner = (browser, data) =>
+{
+    //click all the buttons
+    data.buttons.forEach(button =>
+    {
+        buttonClicker(browser, button)
+    })
+
+    //check the solution
+
+    browser.expect.element(selectors['result']).text.to.equal(data.solution)
+    
+    
+}
+
 module.exports = {
     uiChecker: uiChecker,
-    buttonClicker: buttonClicker
+    buttonClicker: buttonClicker,
+    testRunner: testRunner
 }

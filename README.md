@@ -37,15 +37,19 @@ We have here a basic calculator app that you will be utilizing to start your tes
 ### Setup
 
 To begin, clone this repository to your machine. In your terminal navigate to the folder where you will keep your projects (src or devmtn or projects, whatever you named it). There, run the following command:
+
 `git clone https://github.com/DevMountain-QA/nightwatch-introduction.git`
 
 Once it has finished downloading `cd` into the project root.
+
 `cd nightwatch-introduction`
 
 Now, run `npm i` to install the project dependencies.
+
 `npm i`
 
 After they are installed run `npm start` and a browser window will open at `http://localhost:3000` displaying a (fully functional) calculator app.
+
 `npm start`
 
 * You will need to write up a `nightwatch.props.js` file, or **copy one from another repository if you already have one**.  There are some detailed instructions below on setting one up.

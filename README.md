@@ -249,8 +249,6 @@ Now you can go ahead and write two additional tests, using the same steps you fo
 
 Test your tests on occasion by saving the file then using the command `npm run step1`.
 
-</details>
-
 ### Code Solution
 
 <details>
@@ -284,6 +282,8 @@ module.exports = {
     }
 }
 ```
+
+</details>
 
 </details>
 
@@ -366,8 +366,6 @@ Now, after replacing all the string selectors with those from our page object, I
 
 <img src="https://raw.githubusercontent.com/devmtn-aj/nightwatch-introduction/solution/readme-assets/step1Results.png"/>
 
-</details>
-
 ### Code Solution
 
 <details>
@@ -434,6 +432,8 @@ module.exports = {
     }
 }
 ```
+
+</details>
 
 </details>
 
@@ -603,8 +603,6 @@ You can also rework your existing test(s) now with the `clickButton` function!
 
 Good work stepping into the world of functions. In our next step, we'll start incorporating a data file!
 
-</details>
-
 ### Code Solution
 
 <details>
@@ -688,6 +686,8 @@ module.exports = {
     }
 }
 ```
+
+</details>
 
 </details>
 
@@ -909,8 +909,6 @@ Your results might look slightly different, but you should be good to go! If not
 
 Now we'll need to add an `otherButtons` property to our `test-data/data` file, but that shouldn't be too tough! Just make sure to include button presses and result checks for the buttons we haven't checked yet. That part will be up to you to come up with.
 
-</details>
-
 ### Code Solution
 
 <details>
@@ -995,6 +993,8 @@ module.exports = {
     }
 }
 ```
+
+</details>
 
 </details>
 

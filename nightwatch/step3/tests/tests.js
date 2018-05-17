@@ -1,25 +1,24 @@
-const selectors = require('../supporting/selectors')
-
 module.exports = {
-    beforeEach : browser => {
-        browser.url('http://localhost:3000')
+    beforeEach: browser => {
+        let calculator = browser.page.calculator()
+        calculator.navigate()
     },
-    after : browser => {
+    after: browser => {
         browser.end()
     },
-    '2+2=4' : browser => {
-        //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
-        browser
-            .click(selectors['2'])
-            .expect.element(selectors['result']).text.to.equal('2')
-        browser
-            .click(selectors['+'])
-            .expect.element(selectors['result']).text.to.equal('0')
-        browser
-            .click(selectors['2'])
-            .expect.element(selectors['result']).text.to.equal('2')
-        browser
-            .click(selectors['='])
-            .expect.element(selectors['result']).text.to.equal('4')
+    '2+2=4': browser => {
+        let calculator = browser.page.calculator()
+        calculator
+            .click('@2Button')
+            .expect.element('@result').text.to.equal('2')
+        calculator
+            .click('@addButton')
+            .expect.element('@result').text.to.equal('0')
+        calculator
+            .click('@2Button')
+            .expect.element('@result').text.to.equal('2')
+        calculator
+            .click('@equalsButton')
+            .expect.element('@result').text.to.equal('4')
     }
 }

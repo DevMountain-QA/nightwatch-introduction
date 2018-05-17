@@ -1,31 +1,30 @@
-const selectors = require('../supporting/selectors')
-const functions = require('../supporting/functions')
+const uiCheck = require('../functions/uiCheck')
+const clickButton = require('../functions/clickButton')
 
 module.exports = {
     beforeEach : browser => {
-        browser.url('http://localhost:3000')
-        functions.buttonClicker(browser, 'AC')
+        let calculator = browser.page.solutionCalculator()
+        calculator.navigate()
     },
     after : browser => {
         browser.end()
     },
-    'UI Check' : browser => functions.uiChecker(browser),
+    'UI Check' : browser => uiCheck(browser.page.solutionCalculator()),
     '2+2=4' : browser => {
-        //I click all the appropriate buttons and check the display for the appropriate results, per the steps of my test case
-        functions.buttonClicker(browser, '2')
-        functions.buttonClicker(browser, '+')
-        functions.buttonClicker(browser, '2')
-        functions.buttonClicker(browser, '=')
-        browser.expect.element(selectors['result']).text.to.equal('4')
+        let calculator = browser.page.solutionCalculator()
+        clickButton(calculator, '@2Button', '2')
+        clickButton(calculator, '@addButton', '0')
+        clickButton(calculator, '@2Button', '2')
+        clickButton(calculator, '@equalsButton', '4')
     },
     '32.1*2=64.2' : browser => {
-        functions.buttonClicker(browser, '3')
-        functions.buttonClicker(browser, '2')
-        functions.buttonClicker(browser, '.')
-        functions.buttonClicker(browser, '1')
-        functions.buttonClicker(browser, '*')
-        functions.buttonClicker(browser, '2')
-        functions.buttonClicker(browser, '=')
-        browser.expect.element(selectors['result']).text.to.equal('64.2')
+        let calculator = browser.page.solutionCalculator()
+        clickButton(calculator, '@3Button', '3')
+        clickButton(calculator, '@2Button', '32')
+        clickButton(calculator, '@decimalButton', '32.')
+        clickButton(calculator, '@1Button', '32.1')
+        clickButton(calculator, '@multiplyButton', '0')
+        clickButton(calculator, '@2Button', '2')
+        clickButton(calculator, '@equalsButton', '64.2')
     }
 }

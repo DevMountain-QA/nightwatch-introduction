@@ -599,8 +599,6 @@ You should get something similar to this! If you get errors, look back over your
 
 You can also rework your existing test(s) now with the `clickButton` function!
 
-</details>
-
 Good work stepping into the world of functions. In our next step, we'll start incorporating a data file!
 
 ### Code Solution

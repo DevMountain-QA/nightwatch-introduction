@@ -306,7 +306,7 @@ Now that we've written a basic test and seen it run, now we can start to take ad
 
 First we need to create the `calculator.js` file, inside of the `pageObjects` folder, which is inside of the repository's `nightwatch` folder.
 
-In that `calculator.js` file we'll export the object that will become our page o ject.
+In that `calculator.js` file we'll export the object that will become our page object.
 
 ```js
 module.exports = {
@@ -314,7 +314,7 @@ module.exports = {
 }
 ```
 
-It's as simple as that. Now we just need to populate the object with properites. First we'll add a property for the url, where the key is `url` and the value is the url we need for the calculator app, `http://localhost:3000`. Next we need to add our selectors. In a page object, we will add a property called `elements`.
+It's as simple as that. Now we just need to populate the object with properties. First we'll add a property for the url, where the key is `url` and the value is the url we need for the calculator app, `http://localhost:3000`. Next we need to add our selectors. In a page object, we will add a property called `elements`.
 
 The `elements` property will be another object containing all the selectors we may need to use. The good news is that you already know how to build your selectors, `tag[attributeName=attributeValue]` for CSS, or in other formats for XPath. We even had a few already in our last test. So go out and start grabbing tags and attributes to build your selectors for all of the buttons in the calculator, and the display.
 
@@ -500,13 +500,13 @@ We'll create the new test right after the `after` function is declared, and befo
     after : browser => {
         browser.end()
     },
-    'UI Check' : browser => functions.uiCheck(),
+    'UI Check' : browser => uiCheck(),
 ```
 
 In that declaration, we're missing something. We need to pass in the `calculator` page object! The good news is that we can declare it right where we call the `uiCheck` function.
 
 ```js
-    'UI Check' : browser => functions.uiCheck(browser.page.calculator()),
+    'UI Check' : browser => uiCheck(browser.page.calculator()),
 ```
 
 Now lets run the test using `npm run step3`, and see how we do!
@@ -776,10 +776,10 @@ For example, the `2+2=4` test would look like
 ```js
 '2+2=4' : browser => {
     let calculator = browser.page.calculator()
-    clickButton(calculator, testData.simpleAddition[0].button, testData.simpleAddition[0].button)
-    clickButton(calculator, testData.simpleAddition[1].button, testData.simpleAddition[1].button)
-    clickButton(calculator, testData.simpleAddition[2].button, testData.simpleAddition[2].button)
-    clickButton(calculator, testData.simpleAddition[3].button, testData.simpleAddition[3].button)
+    clickButton(calculator, testData.simpleAddition[0].button, testData.simpleAddition[0].result)
+    clickButton(calculator, testData.simpleAddition[1].button, testData.simpleAddition[1].result)
+    clickButton(calculator, testData.simpleAddition[2].button, testData.simpleAddition[2].result)
+    clickButton(calculator, testData.simpleAddition[3].button, testData.simpleAddition[3].result)
 }
 ```
 

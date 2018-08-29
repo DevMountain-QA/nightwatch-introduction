@@ -10,7 +10,6 @@ nightwatch.props.js
 selenium-debug.log
 
 # production
-/build
 
 # misc
 .DS_Store
